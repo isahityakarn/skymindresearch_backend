@@ -21,7 +21,9 @@ app.use("/uploads", express.static(uploadDir));
 
 // Import & Use Routes
 import userRoutes from "./routes/userRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 app.use("/api/users", userRoutes);
+app.use("/api/dashboard",dashboardRoutes)
 
 
 // Home Route

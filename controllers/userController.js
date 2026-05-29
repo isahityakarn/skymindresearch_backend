@@ -80,16 +80,18 @@ const loginUser = async (req, res) => {
  */
 const registerUser = async (req, res) => {
     try {
+
+
         // Ensure requester is logged in and has role 1 (Super Admin) or 2 (Admin)
         if (!req.user || (Number(req.user.role) !== 1 && Number(req.user.role) !== 2)) {
             return sendError(res, 403, "Not authorized. Only Super Admin or Admin can register new users.");
         }
 
-        const { name, email, password, role, phone, address } = req.body;
+        const { id, name, email, password, role, phone, address } = req.body;
 
-        // 1. Validation
-        if (!name || !email || !password) {
-            return sendError(res, 400, "Please fill in all fields (name, email, password)");
+        // 1. Core Validation
+        if (!name || !email) {
+            return sendError(res, 400, "Please fill in the required fields (name, email)");
         }
 
         // Simple email regex validation
@@ -98,49 +100,113 @@ const registerUser = async (req, res) => {
             return sendError(res, 400, "Please enter a valid email address");
         }
 
-        if (password.length < 6) {
-            return sendError(res, 400, "Password must be at least 6 characters long");
-        }
-
         const normalizedEmail = email.toLowerCase().trim();
 
-        // 2. Check if user already exists
-        const userExists = await User.findByEmail(normalizedEmail);
-        if (userExists) {
-            return sendError(res, 400, "User with this email already exists");
+        // 2. Check if this is an Update or Create request
+        if (id) {
+            // ==================== UPDATE MODE ====================
+            const userToUpdate = await User.findById(id);
+            if (!userToUpdate) {
+                return sendError(res, 404, "User not found for update");
+            }
+
+            // Check if email conflicts with another user
+            if (normalizedEmail !== userToUpdate.email) {
+                const emailExists = await User.findByEmail(normalizedEmail);
+                if (emailExists) {
+                    return sendError(res, 400, "Email is already in use by another user");
+                }
+            }
+
+            // Hash password if provided
+            let hashedPassword = undefined;
+            if (password) {
+                if (password.length < 6) {
+                    return sendError(res, 400, "Password must be at least 6 characters long");
+                }
+                const salt = await bcrypt.genSalt(10);
+                hashedPassword = await bcrypt.hash(password, salt);
+            }
+
+            // Handle image uploads
+            let user_img = undefined;
+            if (req.file) {
+                user_img = `/uploads/${userImgDir}/${req.file.filename}`;
+            } else if (req.body.user_img !== undefined) {
+                user_img = req.body.user_img || null;
+            }
+
+            // Update user in DB
+            const updatedUser = await User.update(id, {
+                name: name.trim(),
+                email: normalizedEmail,
+                password: hashedPassword,
+                role: role || userToUpdate.role,
+                phone: phone !== undefined ? (phone || null) : userToUpdate.phone,
+                address: address !== undefined ? (address || null) : userToUpdate.address,
+                user_img
+            });
+
+            return sendSuccess(res, 200, "User updated successfully", {
+                user: {
+                    id: updatedUser.id,
+                    name: updatedUser.name,
+                    email: updatedUser.email,
+                    role: updatedUser.role,
+                    phone: updatedUser.phone,
+                    address: updatedUser.address,
+                    user_img: formatUserImage(updatedUser.user_img)
+                },
+                token: generateToken(updatedUser)
+            });
+        } else {
+            // ==================== CREATE MODE ====================
+            if (!password) {
+                return sendError(res, 400, "Password is required to register a new user");
+            }
+
+            if (password.length < 6) {
+                return sendError(res, 400, "Password must be at least 6 characters long");
+            }
+
+            // Check if user already exists
+            const userExists = await User.findByEmail(normalizedEmail);
+            if (userExists) {
+                return sendError(res, 400, "User with this email already exists");
+            }
+
+            // Hash password
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+            // Determine user image path
+            const user_img = req.file ? `/uploads/${userImgDir}/${req.file.filename}` : (req.body.user_img || null);
+
+            // Create user in DB
+            const newUser = await User.create({
+                name: name.trim(),
+                email: normalizedEmail,
+                password: hashedPassword,
+                role: role || 3,
+                phone: phone || null,
+                address: address || null,
+                user_img
+            });
+
+            // Send success response
+            return sendSuccess(res, 201, "User registered successfully", {
+                user: {
+                    id: newUser.id,
+                    name: newUser.name,
+                    email: newUser.email,
+                    role: newUser.role,
+                    phone: newUser.phone,
+                    address: newUser.address,
+                    user_img: formatUserImage(newUser.user_img)
+                },
+                token: generateToken(newUser)
+            });
         }
-
-        // 3. Hash password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        // Determine user image path (multer req.file or fallback to req.body)
-        const user_img = req.file ? `/uploads/${userImgDir}/${req.file.filename}` : (req.body.user_img || null);
-
-        // 4. Create user
-        const newUser = await User.create({
-            name: name.trim(),
-            email: normalizedEmail,
-            password: hashedPassword,
-            role: role || 3,
-            phone: phone || null,
-            address: address || null,
-            user_img
-        });
-
-        // 5. Send success response with token
-        return sendSuccess(res, 201, "User registered successfully", {
-            user: {
-                id: newUser.id,
-                name: newUser.name,
-                email: newUser.email,
-                role: newUser.role,
-                phone: newUser.phone,
-                address: newUser.address,
-                user_img: formatUserImage(newUser.user_img)
-            },
-            token: generateToken(newUser)
-        });
 
     } catch (error) {
         console.error("Error in registerUser controller:", error.message);

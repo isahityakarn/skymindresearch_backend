@@ -11,7 +11,14 @@ import upload from "../middleware/uploadMiddleware.js";
 
 // Route: Register user (Protected - Super Admin/Admin only)
 // POST /api/users/register
-router.post("/register", protect, upload.single("user_img"), registerUser);
+router.post("/register", protect, (req, res, next) => {
+    upload.single("user_img")(req, res, (err) => {
+        if (err) {
+            return res.status(400).json({ success: false, message: err.message });
+        }
+        next();
+    });
+}, registerUser);
 
 // Route: Authenticate user
 // POST /api/users/login

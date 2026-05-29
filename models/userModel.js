@@ -34,7 +34,7 @@ const User = {
     findById: async (id) => {
         try {
             const [rows] = await db.query(
-                "SELECT u.id, u.name, u.email, u.role, r.name AS role_name, u.created_at FROM users u LEFT JOIN roles r ON u.role = r.id WHERE u.id = ? LIMIT 1",
+                "SELECT u.id, u.name, u.email, u.role, u.phone, u.address, u.user_img, r.name AS role_name, u.created_at FROM users u LEFT JOIN roles r ON u.role = r.id WHERE u.id = ? LIMIT 1",
                 [id]
             );
             return rows[0] || null;
@@ -62,6 +62,33 @@ const User = {
             };
         } catch (error) {
             console.error("Error in User.create:", error.message);
+            throw error;
+        }
+    },
+
+    // Update an existing user
+    update: async (id, { name, email, password, role, phone, address, user_img }) => {
+        try {
+            let query = "UPDATE users SET name = ?, email = ?, role = ?, phone = ?, address = ?";
+            const params = [name, email, role || null, phone || null, address || null];
+
+            if (password) {
+                query += ", password = ?";
+                params.push(password);
+            }
+
+            if (user_img !== undefined) {
+                query += ", user_img = ?";
+                params.push(user_img);
+            }
+
+            query += " WHERE id = ?";
+            params.push(id);
+
+            await db.query(query, params);
+            return await User.findById(id);
+        } catch (error) {
+            console.error("Error in User.update:", error.message);
             throw error;
         }
     }
