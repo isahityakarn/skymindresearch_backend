@@ -61,7 +61,7 @@ const Vendor = {
         name, 
         email, 
         redirect_complete, 
-        redirect_quota_full, 
+        redirect_quotafull, 
         redirect_terminate, 
         company, 
         address, 
@@ -69,12 +69,12 @@ const Vendor = {
     }) => {
         try {
             const [result] = await db.query(
-                "INSERT INTO vendors (name, email, redirect_complete, redirect_quota_full, redirect_terminate, company, address, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO vendors (name, email, redirect_complete, redirect_quotafull, redirect_terminate, company, address, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 [
                     name, 
                     email, 
                     redirect_complete || null, 
-                    redirect_quota_full || null, 
+                    redirect_quotafull || null, 
                     redirect_terminate || null, 
                     company || null, 
                     address || null, 
@@ -86,7 +86,7 @@ const Vendor = {
                 name,
                 email,
                 redirect_complete: redirect_complete || null,
-                redirect_quota_full: redirect_quota_full || null,
+                redirect_quotafull: redirect_quotafull || null,
                 redirect_terminate: redirect_terminate || null,
                 company: company || null,
                 address: address || null,
@@ -103,19 +103,19 @@ const Vendor = {
         name, 
         email, 
         redirect_complete, 
-        redirect_quota_full, 
+        redirect_quotafull, 
         redirect_terminate, 
         company, 
         address, 
         is_active 
     }) => {
         try {
-            const query = "UPDATE vendors SET name = ?, email = ?, redirect_complete = ?, redirect_quota_full = ?, redirect_terminate = ?, company = ?, address = ?, is_active = ? WHERE id = ?";
+            const query = "UPDATE vendors SET name = ?, email = ?, redirect_complete = ?, redirect_quotafull = ?, redirect_terminate = ?, company = ?, address = ?, is_active = ? WHERE id = ?";
             const params = [
                 name, 
                 email, 
                 redirect_complete || null, 
-                redirect_quota_full || null, 
+                redirect_quotafull || null, 
                 redirect_terminate || null, 
                 company || null, 
                 address || null, 

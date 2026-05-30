@@ -1,0 +1,853 @@
+{
+  "info": {
+    "name": "Sky Research App API",
+    "description": "Complete API collection for Sky Research App",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12345678"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "login"]
+            }
+          }
+        }
+,
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"role\": 3,\n  \"phone\": \"1234567890\",\n  \"address\": \"123 Main St\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "register"]
+            }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/all-users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "all-users"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "logout"]
+            }
+          }
+        }
+      ]
+    }
+,
+    {
+      "name": "Vendors",
+      "item": [
+        {
+          "name": "Get All Vendors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendors",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendors"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Vendors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendors/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendors", "active"]
+            }
+          }
+        },
+        {
+          "name": "Get Vendor By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendors/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendors", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Vendor By Email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendors/email/vendor@example.com",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendors", "email", "vendor@example.com"]
+            }
+          }
+        }
+,
+        {
+          "name": "Create Vendor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Vendor Name\",\n  \"email\": \"vendor@example.com\",\n  \"redirect_complete\": \"https://example.com/complete\",\n  \"redirect_quota_full\": \"https://example.com/quota-full\",\n  \"redirect_terminate\": \"https://example.com/terminate\",\n  \"company\": \"Company Name\",\n  \"address\": \"123 Vendor St\",\n  \"is_active\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendors",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendors"]
+            }
+          }
+        },
+        {
+          "name": "Update Vendor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Vendor Name\",\n  \"email\": \"updated@example.com\",\n  \"company\": \"Updated Company\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendors/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendors", "1"]
+            }
+          }
+        },
+        {
+          "name": "Deactivate Vendor",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendors/1/deactivate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendors", "1", "deactivate"]
+            }
+          }
+        },
+        {
+          "name": "Delete Vendor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendors/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendors", "1"]
+            }
+          }
+        }
+      ]
+    }
+,
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "Get All Projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "active"]
+            }
+          }
+        },
+        {
+          "name": "Get Project By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Project By PID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/pid/P12345",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "pid", "P12345"]
+            }
+          }
+        },
+        {
+          "name": "Get Project By MID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/mid/M12345",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "mid", "M12345"]
+            }
+          }
+        }
+,
+        {
+          "name": "Get Projects By Vendor ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/vendor/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "vendor", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Projects By Country ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/country/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "country", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Project",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pid\": \"P12345\",\n  \"mid\": \"M12345\",\n  \"old_link\": \"https://old.example.com\",\n  \"new_link\": \"https://new.example.com\",\n  \"vendor_id\": 1,\n  \"country_id\": 1,\n  \"info\": \"Project information\",\n  \"is_active\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects"]
+            }
+          }
+        },
+        {
+          "name": "Update Project",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"new_link\": \"https://updated.example.com\",\n  \"info\": \"Updated information\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "1"]
+            }
+          }
+        },
+        {
+          "name": "Deactivate Project",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/1/deactivate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "1", "deactivate"]
+            }
+          }
+        },
+        {
+          "name": "Delete Project",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "1"]
+            }
+          }
+        }
+      ]
+    }
+,
+    {
+      "name": "Surveys",
+      "item": [
+        {
+          "name": "Get All Surveys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "surveys"]
+            }
+          }
+        },
+        {
+          "name": "Get Survey By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "surveys", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Surveys By Project ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/project/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "surveys", "project", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Surveys By User ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/user/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "surveys", "user", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Surveys By Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/status/completed",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "surveys", "status", "completed"]
+            }
+          }
+        }
+,
+        {
+          "name": "Create Survey",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pid\": 1,\n  \"uid\": 1,\n  \"status\": \"in_progress\",\n  \"start_ip\": \"192.168.1.1\",\n  \"end_ip\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "surveys"]
+            }
+          }
+        },
+        {
+          "name": "Update Survey",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\",\n  \"end_ip\": \"192.168.1.1\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "surveys", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Survey Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "surveys", "1", "status"]
+            }
+          }
+        },
+        {
+          "name": "Update Survey End IP",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"end_ip\": \"192.168.1.1\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/1/end-ip",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "surveys", "1", "end-ip"]
+            }
+          }
+        },
+        {
+          "name": "Delete Survey",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "surveys", "1"]
+            }
+          }
+        }
+      ]
+    }
+,
+    {
+      "name": "Vendor Surveys",
+      "item": [
+        {
+          "name": "Get All Vendor Surveys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys"]
+            }
+          }
+        },
+        {
+          "name": "Get Vendor Survey By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Vendor Surveys By Vendor ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys/vendor/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys", "vendor", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Vendor Surveys By Project ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys/project/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys", "project", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Vendor Surveys By PID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys/pid/P12345",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys", "pid", "P12345"]
+            }
+          }
+        },
+        {
+          "name": "Get Vendor Surveys By User ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys/user/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys", "user", "1"]
+            }
+          }
+        }
+,
+        {
+          "name": "Get Vendor Surveys By MID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys/mid/M12345",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys", "mid", "M12345"]
+            }
+          }
+        },
+        {
+          "name": "Get Vendor Surveys By Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys/status/completed",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys", "status", "completed"]
+            }
+          }
+        },
+        {
+          "name": "Get Vendor Surveys By IP",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys/ip/192.168.1.1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys", "ip", "192.168.1.1"]
+            }
+          }
+        },
+        {
+          "name": "Create Vendor Survey",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vendor_id\": 1,\n  \"project_id\": 1,\n  \"pid\": \"P12345\",\n  \"uid\": 1,\n  \"mid\": \"M12345\",\n  \"status\": \"in_progress\",\n  \"start_ip\": \"192.168.1.1\",\n  \"end_ip\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys"]
+            }
+          }
+        },
+        {
+          "name": "Update Vendor Survey",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\",\n  \"end_ip\": \"192.168.1.1\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys", "1"]
+            }
+          }
+        }
+,
+        {
+          "name": "Update Vendor Survey Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys/1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys", "1", "status"]
+            }
+          }
+        },
+        {
+          "name": "Update Vendor Survey End IP",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"end_ip\": \"192.168.1.1\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys/1/end-ip",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys", "1", "end-ip"]
+            }
+          }
+        },
+        {
+          "name": "Delete Vendor Survey",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys", "1"]
+            }
+          }
+        }
+      ]
+    }
+,
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Get Vendor Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/vendor-stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "vendor-stats"]
+            }
+          }
+        },
+        {
+          "name": "Get Project Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/project-stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "project-stats"]
+            }
+          }
+        },
+        {
+          "name": "Get Country Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/country-stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "country-stats"]
+            }
+          }
+        },
+        {
+          "name": "Get User Activity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/user-activity",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "user-activity"]
+            }
+          }
+        },
+        {
+          "name": "Get Survey Trends",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/survey-trends",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "survey-trends"]
+            }
+          }
+        },
+        {
+          "name": "Get Dashboard Overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/overview",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "overview"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+import express from "express";
+const router = express.Router();
+import {
+    getAllVendors,
+    getVendorById,
+    getVendorByEmail,
+    getActiveVendors,
+    createVendor,
+    updateVendor,
+    deactivateVendor,
+    deleteVendor
+} from "../controllers/vendorController.js";
+import { protect } from "../middleware/authMiddleware.js";
+
+// Route: Get all vendors
+// GET /api/vendors
+router.get("/", protect, getAllVendors);
+
+// Route: Get active vendors
+// GET /api/vendors/active
+router.get("/active", protect, getActiveVendors);
+
+// Route: Get vendor by email
+// GET /api/vendors/email/:email
+router.get("/email/:email", protect, getVendorByEmail);
+
+// Route: Get vendor by ID
+// GET /api/vendors/:id
+router.get("/:id", protect, getVendorById);
+
+// Route: Create a new vendor
+// POST /api/vendors
+router.post("/", protect, createVendor);
+
+// Route: Update a vendor
+// PUT /api/vendors/:id
+router.put("/:id", protect, updateVendor);
+
+// Route: Deactivate a vendor (soft delete)
+// PATCH /api/vendors/:id/deactivate
+router.patch("/:id/deactivate", protect, deactivateVendor);
+
+// Route: Delete a vendor
+// DELETE /api/vendors/:id
+router.delete("/:id", protect, deleteVendor);
+
+export default router;

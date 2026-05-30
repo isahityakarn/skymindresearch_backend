@@ -22,8 +22,16 @@ app.use("/uploads", express.static(uploadDir));
 // Import & Use Routes
 import userRoutes from "./routes/userRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
+import surveyRoutes from "./routes/surveyRoutes.js";
+import projectRoutes from "./routes/projectRoutes.js";
+import vendorRoutes from "./routes/vendorRoutes.js";
+import vendorSurveyRoutes from "./routes/vendorSurveyRoutes.js";
 app.use("/api/users", userRoutes);
-app.use("/api/dashboard",dashboardRoutes)
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/surveys", surveyRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/vendors", vendorRoutes);
+app.use("/api/vendor-surveys", vendorSurveyRoutes);
 
 
 // Home Route
