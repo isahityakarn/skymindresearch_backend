@@ -37,6 +37,49 @@ const getDashboardStats = async (req, res) => {
             "SELECT status, COUNT(*) as count FROM vendor_surveys GROUP BY status"
         );
 
+        // Get total counts by status for surveys
+        const [totalComplete] = await db.query(
+            "SELECT COUNT(*) as count FROM surveys WHERE status = 'complete'"
+        );
+        const [totalQuotafull] = await db.query(
+            "SELECT COUNT(*) as count FROM surveys WHERE status = 'quotafull'"
+        );
+        const [totalTerminate] = await db.query(
+            "SELECT COUNT(*) as count FROM surveys WHERE status = 'terminate'"
+        );
+
+        // Get this month's counts by status
+        const [monthComplete] = await db.query(
+            "SELECT COUNT(*) as count FROM surveys WHERE status = 'complete' AND MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())"
+        );
+        const [monthQuotafull] = await db.query(
+            "SELECT COUNT(*) as count FROM surveys WHERE status = 'quotafull' AND MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())"
+        );
+        const [monthTerminate] = await db.query(
+            "SELECT COUNT(*) as count FROM surveys WHERE status = 'terminate' AND MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())"
+        );
+
+        // Get today's counts by status
+        const [todayComplete] = await db.query(
+            "SELECT COUNT(*) as count FROM surveys WHERE status = 'complete' AND DATE(created_at) = CURRENT_DATE()"
+        );
+        const [todayQuotafull] = await db.query(
+            "SELECT COUNT(*) as count FROM surveys WHERE status = 'quotafull' AND DATE(created_at) = CURRENT_DATE()"
+        );
+        const [todayTerminate] = await db.query(
+            "SELECT COUNT(*) as count FROM surveys WHERE status = 'terminate' AND DATE(created_at) = CURRENT_DATE()"
+        );
+
+        // Get total count for this month
+        const [monthTotalCount] = await db.query(
+            "SELECT COUNT(*) as count FROM surveys WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())"
+        );
+
+        // Get total count for today
+        const [todayTotalCount] = await db.query(
+            "SELECT COUNT(*) as count FROM surveys WHERE DATE(created_at) = CURRENT_DATE()"
+        );
+
         // Get recent activities (last 10 surveys)
         const [recentSurveys] = await db.query(
             "SELECT s.*, u.name as user_name FROM surveys s LEFT JOIN users u ON s.uid = u.id ORDER BY s.created_at DESC LIMIT 10"
@@ -58,7 +101,21 @@ const getDashboardStats = async (req, res) => {
                 activeProjects: activeProjectCount[0].count,
                 surveys: surveyCount[0].count,
                 vendorSurveys: vendorSurveyCount[0].count,
-                roles: roleCount[0].count
+                roles: roleCount[0].count,
+                // Total counts by status
+                totalComplete: totalComplete[0].count,
+                totalQuotafull: totalQuotafull[0].count,
+                totalTerminate: totalTerminate[0].count,
+                // This month counts
+                monthTotal: monthTotalCount[0].count,
+                monthComplete: monthComplete[0].count,
+                monthQuotafull: monthQuotafull[0].count,
+                monthTerminate: monthTerminate[0].count,
+                // Today counts
+                todayTotal: todayTotalCount[0].count,
+                todayComplete: todayComplete[0].count,
+                todayQuotafull: todayQuotafull[0].count,
+                todayTerminate: todayTerminate[0].count
             },
             surveyStatusBreakdown,
             vendorSurveyStatusBreakdown,

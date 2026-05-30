@@ -557,9 +557,91 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/vendor-surveys",
+              "raw": "{{baseUrl}}/api/vendor-surveys?page=1&limit=10",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "vendor-surveys"]
+              "path": ["api", "vendor-surveys"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Records per page (default: 10)"
+                },
+                {
+                  "key": "vendor_id",
+                  "value": "",
+                  "description": "Filter by vendor ID",
+                  "disabled": true
+                },
+                {
+                  "key": "project_id",
+                  "value": "",
+                  "description": "Filter by project ID",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Filter by status",
+                  "disabled": true
+                },
+                {
+                  "key": "uid",
+                  "value": "",
+                  "description": "Filter by user ID",
+                  "disabled": true
+                },
+                {
+                  "key": "pid",
+                  "value": "",
+                  "description": "Filter by PID",
+                  "disabled": true
+                },
+                {
+                  "key": "mid",
+                  "value": "",
+                  "description": "Filter by MID",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Vendor Surveys - With Filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor-surveys?page=1&limit=20&vendor_id=1&status=completed",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor-surveys"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Records per page"
+                },
+                {
+                  "key": "vendor_id",
+                  "value": "1",
+                  "description": "Filter by vendor ID"
+                },
+                {
+                  "key": "status",
+                  "value": "completed",
+                  "description": "Filter by status"
+                }
+              ]
             }
           }
         },
