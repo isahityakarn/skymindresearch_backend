@@ -2,7 +2,84 @@ import db from "../config/db.js";
 
 const Survey = {
 
-    // Find all surveys
+    // Find all surveys with pagination and filters
+    findAllWithPagination: async ({ page = 1, limit = 10, status, id, pid, uid, sortBy = 'created_at', sortOrder = 'DESC' }) => {
+        try {
+            const offset = (page - 1) * limit;
+            
+            // Build WHERE clause dynamically
+            let whereConditions = [];
+            let queryParams = [];
+            
+            if (id) {
+                whereConditions.push("s.id = ?");
+                queryParams.push(id);
+            }
+            if (status) {
+                whereConditions.push("s.status = ?");
+                queryParams.push(status);
+            }
+            if (pid) {
+                whereConditions.push("s.pid = ?");
+                queryParams.push(pid);
+            }
+            if (uid) {
+                whereConditions.push("s.uid = ?");
+                queryParams.push(uid);
+            }
+            
+            const whereClause = whereConditions.length > 0 
+                ? `WHERE ${whereConditions.join(' AND ')}` 
+                : '';
+            
+            // Validate sortBy to prevent SQL injection
+            const allowedSortFields = ['id', 'pid', 'uid', 'status', 'created_at', 'updated_at'];
+            const validSortBy = allowedSortFields.includes(sortBy) ? sortBy : 'created_at';
+            const validSortOrder = sortOrder.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+            
+            // Get total count
+            const countQuery = `
+                SELECT COUNT(*) as total 
+                FROM surveys s 
+                ${whereClause}
+            `;
+            const [countResult] = await db.query(countQuery, queryParams);
+            const total = countResult[0].total;
+            
+            // Get paginated data
+            const dataQuery = `
+                SELECT s.*, 
+                       p.pid AS project_pid, 
+                       u.name AS user_name, 
+                       u.email AS user_email 
+                FROM surveys s 
+                LEFT JOIN projects p ON s.pid = p.id 
+                LEFT JOIN users u ON s.uid = u.id 
+                ${whereClause}
+                ORDER BY s.${validSortBy} ${validSortOrder}
+                LIMIT ? OFFSET ?
+            `;
+            
+            const [rows] = await db.query(dataQuery, [...queryParams, limit, offset]);
+            
+            return {
+                surveys: rows,
+                pagination: {
+                    currentPage: page,
+                    totalPages: Math.ceil(total / limit),
+                    totalItems: total,
+                    itemsPerPage: limit,
+                    hasNextPage: page < Math.ceil(total / limit),
+                    hasPrevPage: page > 1
+                }
+            };
+        } catch (error) {
+            console.error("Error in Survey.findAllWithPagination:", error.message);
+            throw error;
+        }
+    },
+
+    // Find all surveys (legacy method - kept for backward compatibility)
     findAll: async () => {
         try {
             const [rows] = await db.query(

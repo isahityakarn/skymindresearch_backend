@@ -2,16 +2,49 @@ import Survey from "../models/surveyModel.js";
 import { sendError, sendSuccess } from "../utils/responseHelper.js";
 
 /**
- * @desc    Get all surveys
+ * @desc    Get all surveys with pagination and filters
  * @route   GET /api/surveys
+ * @query   page, limit, status, id, pid, uid, sortBy, sortOrder
  * @access  Private
+ * 
+ * Example: GET /api/surveys?page=1&limit=10&status=active&pid=5&sortBy=created_at&sortOrder=DESC
  */
 const getAllSurveys = async (req, res) => {
     try {
-        const surveys = await Survey.findAll();
-        return sendSuccess(res, 200, "Surveys retrieved successfully", {
-            surveys
+        // Extract query parameters
+        const {
+            page = 1,
+            limit = 10,
+            status,
+            id,
+            pid,
+            uid,
+            sortBy = 'created_at',
+            sortOrder = 'DESC'
+        } = req.query;
+
+        // Convert to appropriate types
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+
+        // Validate pagination parameters
+        if (pageNum < 1 || limitNum < 1 || limitNum > 100) {
+            return sendError(res, 400, "Invalid pagination parameters. Page must be >= 1 and limit must be between 1 and 100");
+        }
+
+        // Get paginated surveys
+        const result = await Survey.findAllWithPagination({
+            page: pageNum,
+            limit: limitNum,
+            status,
+            id,
+            pid,
+            uid,
+            sortBy,
+            sortOrder
         });
+
+        return sendSuccess(res, 200, "Surveys retrieved successfully", result);
     } catch (error) {
         console.error("Error in getAllSurveys controller:", error.message);
         return sendError(res, 500, "Internal server error retrieving surveys");
@@ -42,18 +75,39 @@ const getSurveyById = async (req, res) => {
 };
 
 /**
- * @desc    Get surveys by project ID
+ * @desc    Get surveys by project ID with pagination
  * @route   GET /api/surveys/project/:pid
+ * @query   page, limit, status, sortBy, sortOrder
  * @access  Private
  */
 const getSurveysByProjectId = async (req, res) => {
     try {
         const { pid } = req.params;
-        const surveys = await Survey.findByProjectId(pid);
+        const {
+            page = 1,
+            limit = 10,
+            status,
+            sortBy = 'created_at',
+            sortOrder = 'DESC'
+        } = req.query;
 
-        return sendSuccess(res, 200, "Surveys retrieved successfully", {
-            surveys
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+
+        if (pageNum < 1 || limitNum < 1 || limitNum > 100) {
+            return sendError(res, 400, "Invalid pagination parameters");
+        }
+
+        const result = await Survey.findAllWithPagination({
+            page: pageNum,
+            limit: limitNum,
+            pid,
+            status,
+            sortBy,
+            sortOrder
         });
+
+        return sendSuccess(res, 200, "Surveys retrieved successfully", result);
     } catch (error) {
         console.error("Error in getSurveysByProjectId controller:", error.message);
         return sendError(res, 500, "Internal server error retrieving surveys");
@@ -61,18 +115,39 @@ const getSurveysByProjectId = async (req, res) => {
 };
 
 /**
- * @desc    Get surveys by user ID
+ * @desc    Get surveys by user ID with pagination
  * @route   GET /api/surveys/user/:uid
+ * @query   page, limit, status, sortBy, sortOrder
  * @access  Private
  */
 const getSurveysByUserId = async (req, res) => {
     try {
         const { uid } = req.params;
-        const surveys = await Survey.findByUserId(uid);
+        const {
+            page = 1,
+            limit = 10,
+            status,
+            sortBy = 'created_at',
+            sortOrder = 'DESC'
+        } = req.query;
 
-        return sendSuccess(res, 200, "Surveys retrieved successfully", {
-            surveys
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+
+        if (pageNum < 1 || limitNum < 1 || limitNum > 100) {
+            return sendError(res, 400, "Invalid pagination parameters");
+        }
+
+        const result = await Survey.findAllWithPagination({
+            page: pageNum,
+            limit: limitNum,
+            uid,
+            status,
+            sortBy,
+            sortOrder
         });
+
+        return sendSuccess(res, 200, "Surveys retrieved successfully", result);
     } catch (error) {
         console.error("Error in getSurveysByUserId controller:", error.message);
         return sendError(res, 500, "Internal server error retrieving surveys");
@@ -80,18 +155,41 @@ const getSurveysByUserId = async (req, res) => {
 };
 
 /**
- * @desc    Get surveys by status
+ * @desc    Get surveys by status with pagination
  * @route   GET /api/surveys/status/:status
+ * @query   page, limit, pid, uid, sortBy, sortOrder
  * @access  Private
  */
 const getSurveysByStatus = async (req, res) => {
     try {
         const { status } = req.params;
-        const surveys = await Survey.findByStatus(status);
+        const {
+            page = 1,
+            limit = 10,
+            pid,
+            uid,
+            sortBy = 'created_at',
+            sortOrder = 'DESC'
+        } = req.query;
 
-        return sendSuccess(res, 200, "Surveys retrieved successfully", {
-            surveys
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+
+        if (pageNum < 1 || limitNum < 1 || limitNum > 100) {
+            return sendError(res, 400, "Invalid pagination parameters");
+        }
+
+        const result = await Survey.findAllWithPagination({
+            page: pageNum,
+            limit: limitNum,
+            status,
+            pid,
+            uid,
+            sortBy,
+            sortOrder
         });
+
+        return sendSuccess(res, 200, "Surveys retrieved successfully", result);
     } catch (error) {
         console.error("Error in getSurveysByStatus controller:", error.message);
         return sendError(res, 500, "Internal server error retrieving surveys");

@@ -11,14 +11,14 @@ import {
 } from "../controllers/dashboardController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
-router.post("/overview", protect, getDashboardOverview);
-router.post("/stats",protect, getDashboardStats);
-router.post("/vendor-stats", protect, getVendorStats);
-router.post("/project-stats", protect, getProjectStats);
-router.post("/country-stats", protect, getCountryStats);
+router.get("/overview", protect, getDashboardOverview);
+router.get("/stats",protect, getDashboardStats);
+router.get("/vendor-stats", protect, getVendorStats);
+router.get("/project-stats", protect, getProjectStats);
+router.get("/country-stats", protect, getCountryStats);
     
-router.post("/user-activity", protect, getUserActivity);
-router.post("/survey-trends", protect, getSurveyTrends);
+router.get("/user-activity", protect, getUserActivity);
+router.get("/survey-trends", protect, getSurveyTrends);
     
 
 export default router;

@@ -2,15 +2,104 @@ import VendorSurvey from "../models/vendorSurveyModel.js";
 import { sendError, sendSuccess } from "../utils/responseHelper.js";
 
 /**
- * @desc    Get all vendor surveys
- * @route   GET /api/vendor-surveys
+ * @desc    Get all vendor surveys with filtering and pagination
+ * @route   GET /api/vendor-surveys?page=1&limit=10&vendor_id=1&status=completed
  * @access  Private
  */
 const getAllVendorSurveys = async (req, res) => {
     try {
-        const vendorSurveys = await VendorSurvey.findAll();
+        const { 
+            page = 1, 
+            limit = 10, 
+            vendor_id, 
+            project_id, 
+            status, 
+            uid, 
+            pid, 
+            mid 
+        } = req.query;
+
+        // Calculate offset for pagination
+        const offset = (parseInt(page) - 1) * parseInt(limit);
+
+        // Build WHERE clause based on filters
+        let whereConditions = [];
+        let queryParams = [];
+
+        if (vendor_id) {
+            whereConditions.push("vs.vendor_id = ?");
+            queryParams.push(vendor_id);
+        }
+
+        if (project_id) {
+            whereConditions.push("vs.project_id = ?");
+            queryParams.push(project_id);
+        }
+
+        if (status) {
+            whereConditions.push("vs.status = ?");
+            queryParams.push(status);
+        }
+
+        if (uid) {
+            whereConditions.push("vs.uid = ?");
+            queryParams.push(uid);
+        }
+
+        if (pid) {
+            whereConditions.push("vs.pid = ?");
+            queryParams.push(pid);
+        }
+
+        if (mid) {
+            whereConditions.push("vs.mid = ?");
+            queryParams.push(mid);
+        }
+
+        const whereClause = whereConditions.length > 0 
+            ? `WHERE ${whereConditions.join(" AND ")}` 
+            : "";
+
+        // Import db for custom query
+        const db = (await import("../config/db.js")).default;
+
+        // Get total count for pagination
+        const [countResult] = await db.query(
+            `SELECT COUNT(*) as total 
+             FROM vendor_surveys vs 
+             ${whereClause}`,
+            queryParams
+        );
+        const totalRecords = countResult[0].total;
+        const totalPages = Math.ceil(totalRecords / parseInt(limit));
+
+        // Get paginated results
+        const [vendorSurveys] = await db.query(
+            `SELECT vs.*, 
+                    v.name AS vendor_name, 
+                    p.pid AS project_pid, 
+                    u.name AS user_name, 
+                    u.email AS user_email 
+             FROM vendor_surveys vs 
+             LEFT JOIN vendors v ON vs.vendor_id = v.id 
+             LEFT JOIN projects p ON vs.project_id = p.id 
+             LEFT JOIN users u ON vs.uid = u.id 
+             ${whereClause}
+             ORDER BY vs.created_at DESC 
+             LIMIT ? OFFSET ?`,
+            [...queryParams, parseInt(limit), offset]
+        );
+
         return sendSuccess(res, 200, "Vendor surveys retrieved successfully", {
-            vendorSurveys
+            vendorSurveys,
+            pagination: {
+                currentPage: parseInt(page),
+                totalPages,
+                totalRecords,
+                limit: parseInt(limit),
+                hasNextPage: parseInt(page) < totalPages,
+                hasPrevPage: parseInt(page) > 1
+            }
         });
     } catch (error) {
         console.error("Error in getAllVendorSurveys controller:", error.message);
