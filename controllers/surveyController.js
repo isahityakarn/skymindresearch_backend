@@ -1,5 +1,6 @@
 import Survey from "../models/surveyModel.js";
 import { sendError, sendSuccess } from "../utils/responseHelper.js";
+import { getClientIp } from "../utils/ipHelper.js";
 
 /**
  * @desc    Get all surveys with pagination and filters
@@ -212,13 +213,23 @@ const createSurvey = async (req, res) => {
             return sendError(res, 400, "Please provide project ID (pid) and user ID (uid)");
         }
 
-        // Create survey
+        // Check if survey already exists for this PID and UID with "complete" status
+        const existingSurvey = await Survey.findByPidAndUid(pid, uid, "complete");
+        
+        if (existingSurvey) {
+            return sendError(res, 409, "You have already punched entry for this project");
+        }
+
+        // Get user's current IP address
+        const currentIp = getClientIp(req);
+
+        // Create survey with current IP
         const newSurvey = await Survey.create({
             pid,
             uid,
             status: status || null,
-            start_ip: start_ip || null,
-            end_ip: end_ip || null
+            start_ip: start_ip || currentIp,
+            end_ip: end_ip || currentIp
         });
 
         return sendSuccess(res, 201, "Survey created successfully", {

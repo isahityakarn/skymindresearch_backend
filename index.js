@@ -26,13 +26,14 @@ import surveyRoutes from "./routes/surveyRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
 import vendorRoutes from "./routes/vendorRoutes.js";
 import vendorSurveyRoutes from "./routes/vendorSurveyRoutes.js";
+import redirectSurveyRoutes from "./routes/redirectSurveyRoutes.js";
 app.use("/api/users", userRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/surveys", surveyRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/vendors", vendorRoutes);
 app.use("/api/vendor-surveys", vendorSurveyRoutes);
-
+app.use("/api/redirect", redirectSurveyRoutes);
 
 // Home Route
 app.get("/", (req, res) => {

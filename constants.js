@@ -8,6 +8,16 @@ export const uploadDir = path.join(__dirname, "./uploads");
 
 export const userImgDir = "users";
 
+export const status = [
+    {
+        "name": "complete"
+    }, {
+        "name": "quotafull"
+    }, {
+        "name": "terminate"
+    },
+];
+
 export const roles = [
     {
         id: 1,

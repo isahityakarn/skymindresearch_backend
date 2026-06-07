@@ -162,11 +162,32 @@ const Survey = {
         }
     },
 
+    // Find survey by PID and UID (optionally filter by status)
+    findByPidAndUid: async (pid, uid, status = null) => {
+        try {
+            let query = "SELECT s.*, p.pid AS project_pid, u.name AS user_name, u.email AS user_email FROM surveys s LEFT JOIN projects p ON s.pid = p.id LEFT JOIN users u ON s.uid = u.id WHERE s.pid = ? AND s.uid = ?";
+            const params = [pid, uid];
+            
+            if (status) {
+                query += " AND s.status = ?";
+                params.push(status);
+            }
+            
+            query += " LIMIT 1";
+            
+            const [rows] = await db.query(query, params);
+            return rows[0] || null;
+        } catch (error) {
+            console.error("Error in Survey.findByPidAndUid:", error.message);
+            throw error;
+        }
+    },
+
     // Create a new survey
     create: async ({ pid, uid, status, start_ip, end_ip }) => {
         try {
             const [result] = await db.query(
-                "INSERT INTO surveys (pid, uid, status, start_ip, end_ip) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO surveys (pid, uid, status, start_ip, end_ip, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
                 [
                     pid || null,
                     uid || null,
@@ -192,7 +213,7 @@ const Survey = {
     // Update an existing survey
     update: async (id, { pid, uid, status, start_ip, end_ip }) => {
         try {
-            const query = "UPDATE surveys SET pid = ?, uid = ?, status = ?, start_ip = ?, end_ip = ? WHERE id = ?";
+            const query = "UPDATE surveys SET pid = ?, uid = ?, status = ?, start_ip = ?, end_ip = ?, updated_at = NOW() WHERE id = ?";
             const params = [
                 pid || null,
                 uid || null,
@@ -214,7 +235,7 @@ const Survey = {
     updateStatus: async (id, status) => {
         try {
             await db.query(
-                "UPDATE surveys SET status = ? WHERE id = ?",
+                "UPDATE surveys SET status = ?, updated_at = NOW() WHERE id = ?",
                 [status, id]
             );
             return await Survey.findById(id);
@@ -228,7 +249,7 @@ const Survey = {
     updateEndIp: async (id, end_ip) => {
         try {
             await db.query(
-                "UPDATE surveys SET end_ip = ? WHERE id = ?",
+                "UPDATE surveys SET end_ip = ?, updated_at = NOW() WHERE id = ?",
                 [end_ip, id]
             );
             return await Survey.findById(id);
