@@ -36,3 +36,57 @@ export const protect = async (req, res, next) => {
         return sendError(res, 401, "Not authorized, no token provided");
     }
 };
+
+/**
+ * Middleware to check if user has one of the allowed roles
+ * Only accepts role IDs (numbers)
+ * Usage: 
+ *   - adminOnly() - defaults to role ID 2 (admin)
+ *   - adminOnly(1, 2) - allows role IDs 1 or 2
+ *   - adminOnly(3) - allows only role ID 3
+ */
+export const adminOnly = (...allowedRoles) => {
+    // If no roles specified, default to role ID 2 (admin)
+    if (allowedRoles.length === 0) {
+        allowedRoles = [1,2];
+    }
+
+    return (req, res, next) => {
+        if (!req.user) {
+            return sendError(res, 401, "Not authorized, user not authenticated");
+        }
+
+        // Get user's role ID
+        const userRoleId = req.user.role;
+
+        // Check if user's role ID matches any of the allowed roles
+        if (!allowedRoles.includes(userRoleId)) {
+            return sendError(res, 403, "Access denied. Insufficient permissions.");
+        }
+
+        next();
+    };
+};
+
+/**
+ * Middleware to restrict access based on role IDs
+ * Only accepts role IDs (numbers)
+ * Usage: restrictTo(1, 2, 3)
+ */
+export const restrictTo = (...allowedRoles) => {
+    return (req, res, next) => {
+        if (!req.user) {
+            return sendError(res, 401, "Not authorized, user not authenticated");
+        }
+
+        // Get user's role ID
+        const userRoleId = req.user.role;
+
+        // Check if user's role ID matches any of the allowed roles
+        if (!allowedRoles.includes(userRoleId)) {
+            return sendError(res, 403, "Access denied. Insufficient permissions.");
+        }
+
+        next();
+    };
+};

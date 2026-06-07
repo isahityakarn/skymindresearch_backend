@@ -19,7 +19,7 @@ connection.getConnection((err, conn) => {
     if (err) {
         console.log("Database connection failed:", err.message);
     } else {
-        console.log("MySQL Connected Successfully");
+        // console.log("MySQL Connected Successfully");
         conn.release();
     }
 });

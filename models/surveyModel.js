@@ -3,7 +3,7 @@ import db from "../config/db.js";
 const Survey = {
 
     // Find all surveys with pagination and filters
-    findAllWithPagination: async ({ page = 1, limit = 10, status, id, pid, uid, sortBy = 'created_at', sortOrder = 'DESC' }) => {
+    findAllWithPagination: async ({ page = 1, limit = 100, status, id, pid, uid, sortBy = 'created_at', sortOrder = 'DESC' }) => {
         try {
             const offset = (page - 1) * limit;
             

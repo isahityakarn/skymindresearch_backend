@@ -66,6 +66,17 @@ const User = {
         }
     },
 
+    // Update password only
+    updatePassword: async (id, hashedPassword) => {
+        try {
+            await db.query("UPDATE users SET password = ? WHERE id = ?", [hashedPassword, id]);
+            return true;
+        } catch (error) {
+            console.error("Error in User.updatePassword:", error.message);
+            throw error;
+        }
+    },
+
     // Update an existing user
     update: async (id, { name, email, password, role, phone, address, user_img }) => {
         try {

@@ -1,5 +1,5 @@
 import path from "path";
-import { fileURLToPath } from "url";
+import {fileURLToPath} from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -7,3 +7,16 @@ const __dirname = path.dirname(__filename);
 export const uploadDir = path.join(__dirname, "./uploads");
 
 export const userImgDir = "users";
+
+export const roles = [
+    {
+        id: 1,
+        name: "Super Admin"
+    }, {
+        id: 2,
+        name: "Admin"
+    }, {
+        id: 3,
+        name: "User"
+    }
+];

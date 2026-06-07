@@ -249,10 +249,42 @@ const logoutUser = async (req, res) => {
     }
 };
 
+/**
+ * @desc    Change password for a specific user (admin action)
+ * @route   PATCH /api/users/:id/change-password
+ * @access  Private
+ */
+const changePassword = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { newPassword } = req.body;
+
+        if (!newPassword || newPassword.length < 6) {
+            return sendError(res, 400, "New password must be at least 6 characters long");
+        }
+
+        const user = await User.findById(id);
+        if (!user) {
+            return sendError(res, 404, "User not found");
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        await User.updatePassword(id, hashedPassword);
+
+        return sendSuccess(res, 200, `Password updated successfully for ${user.name}`);
+    } catch (error) {
+        console.error("Error in changePassword controller:", error.message);
+        return sendError(res, 500, "Internal server error changing password");
+    }
+};
+
 export {
     loginUser,
     registerUser,
     getAllUsers,
-    logoutUser
+    logoutUser,
+    changePassword
 };
 

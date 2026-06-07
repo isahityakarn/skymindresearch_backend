@@ -13,7 +13,7 @@ import db from "../config/db.js";
  * @route   GET /api/dashboard/stats
  * @access  Private
  */
-const getDashboardStats = async (req, res) => {
+export const getDashboardStats = async (req, res) => {
     try {
         // Get counts for all entities
         const [userCount] = await db.query("SELECT COUNT(*) as count FROM users");
@@ -134,7 +134,7 @@ const getDashboardStats = async (req, res) => {
  * @route   GET /api/dashboard/vendor-stats
  * @access  Private
  */
-const getVendorStats = async (req, res) => {
+export const getVendorStats = async (req, res) => {
     try {
         // Get vendor statistics with project and survey counts
         const [vendorStats] = await db.query(`
@@ -168,7 +168,7 @@ const getVendorStats = async (req, res) => {
  * @route   GET /api/dashboard/project-stats
  * @access  Private
  */
-const getProjectStats = async (req, res) => {
+export const getProjectStats = async (req, res) => {
     try {
         // Get project statistics with survey counts
         const [projectStats] = await db.query(`
@@ -207,7 +207,7 @@ const getProjectStats = async (req, res) => {
  * @route   GET /api/dashboard/country-stats
  * @access  Private
  */
-const getCountryStats = async (req, res) => {
+export const getCountryStats = async (req, res) => {
     try {
         // Get country statistics with project counts (only countries that have projects)
         const [countryStats] = await db.query(`
@@ -238,7 +238,7 @@ const getCountryStats = async (req, res) => {
  * @route   GET /api/dashboard/user-activity
  * @access  Private
  */
-const getUserActivity = async (req, res) => {
+export const getUserActivity = async (req, res) => {
     try {
         // Get user activity with survey counts
         const [userActivity] = await db.query(`
@@ -274,7 +274,7 @@ const getUserActivity = async (req, res) => {
  * @route   GET /api/dashboard/survey-trends
  * @access  Private
  */
-const getSurveyTrends = async (req, res) => {
+export const getSurveyTrends = async (req, res) => {
     try {
         // Get survey trends for the last 30 days
         const [surveyTrends] = await db.query(`
@@ -314,7 +314,7 @@ const getSurveyTrends = async (req, res) => {
  * @route   GET /api/dashboard/overview
  * @access  Private
  */
-const getDashboardOverview = async (req, res) => {
+export const getDashboardOverview = async (req, res) => {
     try {
         // Get all necessary data in parallel
         const [
@@ -376,12 +376,3 @@ const getDashboardOverview = async (req, res) => {
     }
 };
 
-export {
-    getDashboardStats,
-    getVendorStats,
-    getProjectStats,
-    getCountryStats,
-    getUserActivity,
-    getSurveyTrends,
-    getDashboardOverview
-};

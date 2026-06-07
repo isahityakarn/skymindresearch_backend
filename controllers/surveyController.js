@@ -10,11 +10,13 @@ import { sendError, sendSuccess } from "../utils/responseHelper.js";
  * Example: GET /api/surveys?page=1&limit=10&status=active&pid=5&sortBy=created_at&sortOrder=DESC
  */
 const getAllSurveys = async (req, res) => {
+
+    // console.log(req)
     try {
         // Extract query parameters
         const {
             page = 1,
-            limit = 10,
+            limit = 100,
             status,
             id,
             pid,
